@@ -46,23 +46,23 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                     {{$article->title}}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 text-wrap">
                                     {{$article->text}}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 text-wrap">
                                     {{$article->author}}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                     {{\carbon\Carbon::parse($article->created_at)->format('d M Y')}}
                                 </td>
-                                {{-- <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 d-flex  ">
-                                    <a href="{{route('roles.edit',[$role->id])}}" class="p-2 bg-green-600 text-white rounded-lg"> Edit</a>
-                                <form action="{{route('roles.destroy',[$role->id])}}" method="post" class="inline" onsubmit="confirm('Are You Sure You want To Delete This Role')">
-                                    @method('DELETE')
-                                    @csrf
-                                    <button class="bg-red-400 text-white mt-3 p-2 hover:bg-red-600 rounded-lg shadow-lg">Delete</button>
-                                </form>
-                                </td> --}}
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 d-flex  ">
+                                    <a href="{{route('articles.edit',[$article->id])}}" class="p-2 bg-green-600 text-white rounded-lg"> Edit</a>
+                                    <form action="{{route('articles.destroy',[$article->id])}}" method="post" class="inline" onsubmit="confirm('Are You Sure You want To Delete This Role')">
+                                        @method('DELETE')
+                                        @csrf
+                                        <button class="bg-red-400 text-white mt-3 p-2 hover:bg-red-600 rounded-lg shadow-lg">Delete this article</button>
+                                    </form>
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>

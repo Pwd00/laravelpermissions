@@ -57,7 +57,8 @@ class ArticlesController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $article = Articles::findOrFail($id);
+        return view('articles.edit', compact('article'));
     }
 
     /**
@@ -65,7 +66,21 @@ class ArticlesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $article = Articles::findOrFail($id);
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|min:2|string',
+            'text' => 'required|string|min:8',
+            'author' => 'required|string|min:2'
+        ]);
+        if ($validator->fails()) {
+            return redirect()->route('articles.edit')->withInput()->withErrors($validator);
+        } else {
+            $article->title = $request->input('title');
+            $article->text = $request->input('text');
+            $article->author = $request->input('author');
+            $article->save();
+            return redirect()->route('articles.edit', $id)->with('Success', 'Articles Updated SucessFully');
+        }
     }
 
     /**
