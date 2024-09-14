@@ -88,6 +88,8 @@ class ArticlesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $article = Articles::findOrFail($id);
+        $article->delete();
+        return redirect()->route('articles.index')->with('success', 'Articles Deleted Successfuly 😤😠 ');
     }
 }
