@@ -4,6 +4,7 @@ use App\Http\Controllers\ArticlesController;
 use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RolesController;
+use App\Http\Controllers\UserController;
 use App\Models\Articles;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Contracts\Role;
@@ -40,6 +41,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/articles/edit/{id}', [ArticlesController::class, 'edit'])->name('articles.edit');
     Route::put('/articles/edit/{id}', [ArticlesController::class, 'update'])->name('articles.update');
     Route::delete('articles/delete/{id}', [ArticlesController::class, 'destroy'])->name('articles.destroy');
+    /// Routes For User
+    route::get('/user', [UserController::class, 'index'])->name('users.index');
 });
 
 require __DIR__ . '/auth.php';
