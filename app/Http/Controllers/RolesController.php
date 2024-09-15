@@ -9,16 +9,29 @@ use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role as ModelsRole;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class RolesController extends Controller
+
+
+class RolesController extends Controller implements HasMiddleware
 {
     /**
      * Display a listing of the resource.
      */
+    public static function middleware()
+    {
+        return [
+            new Middleware('permission:view role', only: ['index']),
+            new Middleware('permission:create role', only: ['create']),
+            new Middleware('permission:edit role', only: ['edit']),
+            new Middleware('permission:delete role', only: ['destory']),
+        ];
+    }
     public function index()
     {
         //
-        $roles = ModelsRole::orderBy("created_at", "ASC")->paginate(1);
+        $roles = ModelsRole::orderBy("created_at", "ASC")->paginate(10);
         return view("roles.index", compact("roles"));
     }
 
@@ -48,6 +61,8 @@ class RolesController extends Controller
                 }
             }
             return redirect()->route("roles.index")->with("success", "Roles Added Sucessfully");
+        } else {
+            return redirect()->route("roles.create")->withInput()->withErrors($validator);
         }
     }
 
@@ -75,19 +90,25 @@ class RolesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $role = ModelsRole::findOr($id);
-        $validator = validator::make($request->all(), [
-            'name' => 'required:unique:roles,name,except,' . $id . ',id'
+        // Retrieve the role or fail
+        $role = ModelsRole::findOrFail($id);
+
+        // Define validation rules
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|unique:roles,name,' . $id,
         ]);
+
         if ($validator->passes()) {
             $role->name = $request->input('name');
             $role->save();
-            if (!empty($request->input('per'))) {
-                $role->syncPermissions($request->input('per'));
-            }
-            return redirect()->route('roles.index')->with('success', 'Done Role updated Sucessfully');
+            $permissions = $request->input('per', []);
+            $role->syncPermissions($permissions);
+
+            // Redirect with success message
+            return redirect()->route('roles.index')->with('success', 'Role updated successfully.');
         } else {
-            redirect()->route('roles.edit')->withInput()->withErrors($validator);
+            // Redirect back with input and errors
+            return redirect()->route('roles.edit', $id)->withInput()->withErrors($validator);
         }
     }
 

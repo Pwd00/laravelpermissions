@@ -4,9 +4,12 @@
             {{ __('Users') }}
         </h2>
     </x-slot>
+    @can('create user')
     <div class="min-w-screen overflow-hidden bg-slate-300 my-2 text-white p-5 rounded-lg shadow-xl">
         <a href="{{route('users.create')}}" class="p-2 bg-red-300 rounded-lg shadow-md float-right hover:bg-black text-amber-300">Create Users</a>
     </div>
+    @endcan
+
     <x-message></x-message>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -25,6 +28,9 @@
                                     Email
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Roles
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Created_At
                                 </th>
 
@@ -33,6 +39,7 @@
                                 </th>
                             </tr>
                         </thead>
+
                         <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
                             @foreach ($users as $index => $user )
                             <tr>
@@ -45,19 +52,26 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 text-wrap">
                                     {{$user->email}}
                                 </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 text-wrap">
+
+                                    {{$user->roles->pluck('name')->implode(',')}}
+                                </td>
 
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                     {{\carbon\Carbon::parse($user->created_at)->format(format: 'd M Y-H:i')}}
                                 </td>
-                                {{--}}
+
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 d-flex  ">
-                                    <a href="{{route('articles.edit',[$article->id])}}" class="p-2 bg-green-600 text-white rounded-lg"> Edit</a>
-                                    <form action="{{route('articles.destroy',[$article->id])}}" method="post" class="inline" onsubmit="confirm('Are You Sure You want To Delete This Role')">
+                                    @can('edit user')
+                                    <a href="{{route('users.edit',[$user->id])}}" class="p-2 bg-green-600 text-white rounded-lg"> Edit</a>
+                                    @endcan
+
+                                    <form action="{{route('users.destroy',[$user->id])}}" method="post" class="inline" onsubmit="confirm('Are You Sure You want To Delete This User')">
                                         @method('DELETE')
                                         @csrf
-                                        <button class="bg-red-400 text-white mt-3 p-2 hover:bg-red-600 rounded-lg shadow-lg">Delete this article</button>
+                                        <button class="bg-red-400 text-white mt-3 p-2 hover:bg-red-600 rounded-lg shadow-lg">Delete this User</button>
                                     </form>
-                                </td>--}}
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>

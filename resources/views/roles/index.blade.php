@@ -4,9 +4,12 @@
             {{ __('Roles') }}
         </h2>
     </x-slot>
+    @can('create role')
     <div class="min-w-screen overflow-hidden bg-slate-300 my-2 text-white p-5 rounded-lg shadow-xl">
         <a href="{{route('roles.create')}}" class="p-2 bg-red-300 rounded-lg shadow-md float-right hover:bg-black text-amber-300">Create New Role</a>
     </div>
+    @endcan
+
 
     <x-message></x-message>
     <div class="py-12">
@@ -43,20 +46,26 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                     {{$role->name}}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                    {{$role->permissions->pluck("name")->implode(' , ' )}}
+                                <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 break-words whitespace-normal max-w-xs">
+                                    {{$role->permissions->pluck("name")->implode(', ')}}
                                 </td>
+
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                     {{\carbon\Carbon::parse($role->created_at)->format('d M Y')}}
                                 </td>
 
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 d-flex  ">
+                                    @can('edit role')
                                     <a href="{{route('roles.edit',[$role->id])}}" class="p-2 bg-green-600 text-white rounded-lg"> Edit</a>
+                                    @endcan
+                                    @can('delete role')
                                     <form action="{{route('roles.destroy',[$role->id])}}" method="post" class="inline" onsubmit="confirm('Are You Sure You want To Delete This Role')">
                                         @method('DELETE')
                                         @csrf
                                         <button class="bg-red-400 text-white mt-3 p-2 hover:bg-red-600 rounded-lg shadow-lg">Delete</button>
                                     </form>
+                                    @endcan
+
                                 </td>
                             </tr>
                             @endforeach

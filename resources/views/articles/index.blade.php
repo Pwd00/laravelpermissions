@@ -4,9 +4,12 @@
             {{ __('Articles') }}
         </h2>
     </x-slot>
+    @can('create articles')
     <div class="min-w-screen overflow-hidden bg-slate-300 my-2 text-white p-5 rounded-lg shadow-xl">
         <a href="{{route('articles.create')}}" class="p-2 bg-red-300 rounded-lg shadow-md float-right hover:bg-black text-amber-300">Create Article</a>
     </div>
+    @endcan
+
 
     <x-message></x-message>
     <div class="py-12">
@@ -56,12 +59,17 @@
                                     {{\carbon\Carbon::parse($article->created_at)->format('d M Y')}}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 d-flex  ">
+                                    @can('edit articles')
                                     <a href="{{route('articles.edit',[$article->id])}}" class="p-2 bg-green-600 text-white rounded-lg"> Edit</a>
+                                    @endcan
+                                    @can('delete articles')
                                     <form action="{{route('articles.destroy',[$article->id])}}" method="post" class="inline" onsubmit="confirm('Are You Sure You want To Delete This Role')">
                                         @method('DELETE')
                                         @csrf
                                         <button class="bg-red-400 text-white mt-3 p-2 hover:bg-red-600 rounded-lg shadow-lg">Delete this article</button>
                                     </form>
+                                    @endcan
+
                                 </td>
                             </tr>
                             @endforeach
