@@ -42,7 +42,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/articles/edit/{id}', [ArticlesController::class, 'update'])->name('articles.update');
     Route::delete('articles/delete/{id}', [ArticlesController::class, 'destroy'])->name('articles.destroy');
     /// Routes For User
-    route::get('/user', [UserController::class, 'index'])->name('users.index');
+    Route::get('/user', [UserController::class, 'index'])->name('users.index');
+    Route::get('/user/create/', [UserController::class, 'create'])->name('users.create');
 });
 
 require __DIR__ . '/auth.php';
